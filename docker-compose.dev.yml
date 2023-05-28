@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  database-auth-service-dev:
+    image: postgres
+    ports: 
+      - 3307:5432
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: root
+      POSTGRES_DB: auth-db
+
+  database-cloud-service-dev:
+    image: postgres
+    ports: 
+      - 3308:5432
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: root
+      POSTGRES_DB: cloud-storage-db

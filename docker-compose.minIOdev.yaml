@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  minio:
+    image: minio/minio
+    ports:
+      - 9000:9000
+      - 9090:9090
+    environment:
+      - MINIO_ACCESS_KEY=password
+      - MINIO_SECRET_KEY=password
+      - MINIO_ROOT_USER=ROOTUSER
+      - MINIO_ROOT_PASSWORD=CHANGEME123
+    volumes:
+      - D:\minio\data:/data
+    command: server --console-address ":9090" /data

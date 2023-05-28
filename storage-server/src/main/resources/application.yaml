@@ -1,0 +1,7 @@
+spring:
+  config:
+    name: cloud-storage
+minio:
+  endpoint: localhost:9000
+  accessKey: password
+  secretKey: password
