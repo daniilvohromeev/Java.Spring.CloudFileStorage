@@ -15,6 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
+@Table(name = "users")
 public class User extends BaseEntity<Long> implements UserDetails {
     @Column(nullable = false, unique = true)
     private String username;
@@ -36,8 +37,8 @@ public class User extends BaseEntity<Long> implements UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+            name = "users_role",
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Role> authorities;
 }

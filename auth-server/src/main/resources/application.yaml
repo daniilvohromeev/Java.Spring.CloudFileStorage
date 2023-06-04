@@ -1,3 +1,8 @@
 rsa:
   private-key: classpath:certs/private.pem
   public-key: classpath:certs/public.pem
+spring:
+  application:
+    name: auth-server
+  config:
+    import: optional:configserver:http://localhost:8888

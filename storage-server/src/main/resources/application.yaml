@@ -1,7 +1,5 @@
 spring:
-  config:
+  application:
     name: cloud-storage
-minio:
-  endpoint: localhost:9000
-  accessKey: password
-  secretKey: password
+  config:
+    import: optional:configserver:http://localhost:8888

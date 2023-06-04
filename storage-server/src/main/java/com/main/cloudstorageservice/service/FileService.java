@@ -20,14 +20,12 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class FileService {
+public class  FileService {
 
     private final FileMetadataRepository fileMetadataRepository;
     private MinioClient minioClient;
 
-    public FileMetadata saveFile(MultipartFile multipartFile, Long userId) {//TODO: Через OpenFeign сделать ?
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new Exception("User not found with id " + userId));
+    public FileMetadata saveFile(MultipartFile multipartFile, Long userId) {
 
         String bucketName = "bucket-for-user-" + userId;
         String objectName = UUID.randomUUID().toString();

@@ -1,5 +1,6 @@
 package com.main.authserver.service;
 
+import com.main.authserver.payload.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,7 @@ public class TokenService {
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;
 
-    public String generateToken(Authentication authentication) {
+    public TokenResponse generateToken(Authentication authentication) {
         Instant now = Instant.now();
         String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -33,7 +34,7 @@ public class TokenService {
                 .subject(authentication.getName())
                 .claim("scope", scope)
                 .build();
-        return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        return new TokenResponse(this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue(), claims.getExpiresAt().toString(), generateRefreshToken(authentication));
     }
 
     public String generateRefreshToken(Authentication authentication) {
@@ -48,21 +49,21 @@ public class TokenService {
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
-    public String refreshToken(String refreshToken) {
-        try {
-            Jwt jwt = this.decoder.decode(refreshToken);
-            if (Objects.requireNonNull(jwt.getExpiresAt()).isBefore(Instant.now())) {
-                throw new IllegalArgumentException("Refresh token is expired");
-            }
-            String subject = jwt.getSubject();
-            if (subject == null) {
-                throw new IllegalArgumentException("Refresh token does not have a subject claim");
-            }
-            //TODO: загрузка пользователя и получения прав доступа, а пока так как заглушка
-            Authentication authentication = new UsernamePasswordAuthenticationToken(subject, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
-            return generateToken(authentication);
-        } catch (JwtException e) {
-            throw new IllegalArgumentException("Failed to decode refresh token", e);
-        }
-    }
+//    public String refreshToken(String refreshToken) {
+//        try {
+//            Jwt jwt = this.decoder.decode(refreshToken);
+//            if (Objects.requireNonNull(jwt.getExpiresAt()).isBefore(Instant.now())) {
+//                throw new IllegalArgumentException("Refresh token is expired");
+//            }
+//            String subject = jwt.getSubject();
+//            if (subject == null) {
+//                throw new IllegalArgumentException("Refresh token does not have a subject claim");
+//            }
+//            //TODO: загрузка пользователя и получения прав доступа, а пока так как заглушка
+//            Authentication authentication = new UsernamePasswordAuthenticationToken(subject, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+//            return generateToken(authentication);
+//        } catch (JwtException e) {
+//            throw new IllegalArgumentException("Failed to decode refresh token", e);
+//        }
+//    }
 }

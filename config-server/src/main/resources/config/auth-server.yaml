@@ -1,0 +1,21 @@
+server:
+  port: 8031
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    database: postgresql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:3307/auth-db
+    username: root
+    password: root
+    driverClassName: org.postgresql.Driver
+minio:
+  endpoint: localhost:9000
+  accessKey: password
+  secretKey: password

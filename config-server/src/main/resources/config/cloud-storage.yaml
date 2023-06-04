@@ -1,0 +1,6 @@
+server:
+  port: 8054
+minio:
+  endpoint: localhost:9000
+  accessKey: password
+  secretKey: password
