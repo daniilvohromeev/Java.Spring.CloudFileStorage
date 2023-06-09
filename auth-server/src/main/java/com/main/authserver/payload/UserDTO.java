@@ -1,3 +1,19 @@
 package com.main.authserver.payload;
 
-public record UserDTO(String username, String password, boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired, boolean enabled){}
+import com.main.authserver.model.Role;
+import lombok.*;
+
+import java.util.Set;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
+public class UserDTO {
+    public long id;
+    public String username;
+    public String accessToken;
+    public String refreshToken;
+    public Set<Role> authorities;
+}

@@ -1,17 +1,16 @@
 package com.main.authserver.service;
 
-import com.main.authserver.payload.TokenResponse;
+import com.main.authserver.payload.request.TokenRefreshRequest;
+import com.main.authserver.payload.response.TokenRefreshResponse;
+import com.main.authserver.payload.response.TokenResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -49,21 +48,20 @@ public class TokenService {
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
-//    public String refreshToken(String refreshToken) {
-//        try {
-//            Jwt jwt = this.decoder.decode(refreshToken);
-//            if (Objects.requireNonNull(jwt.getExpiresAt()).isBefore(Instant.now())) {
-//                throw new IllegalArgumentException("Refresh token is expired");
-//            }
-//            String subject = jwt.getSubject();
-//            if (subject == null) {
-//                throw new IllegalArgumentException("Refresh token does not have a subject claim");
-//            }
-//            //TODO: загрузка пользователя и получения прав доступа, а пока так как заглушка
-//            Authentication authentication = new UsernamePasswordAuthenticationToken(subject, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
-//            return generateToken(authentication);
-//        } catch (JwtException e) {
-//            throw new IllegalArgumentException("Failed to decode refresh token", e);
-//        }
-//    }
+    public TokenRefreshResponse refreshToken(TokenRefreshRequest request, Authentication authentication) {
+        try {
+            Jwt jwt = this.decoder.decode(request.getRefreshToken());
+            if (Objects.requireNonNull(jwt.getExpiresAt()).isBefore(Instant.now())) {
+                throw new IllegalArgumentException("Refresh token is expired");
+            }
+            String subject = jwt.getSubject();
+            if (subject == null) {
+                throw new IllegalArgumentException("Refresh token does not have a subject claim");
+            }
+            TokenResponse tokenDTO = generateToken(authentication);
+            return new TokenRefreshResponse(tokenDTO.token(), tokenDTO.refresh_token());
+        } catch (JwtException e) {
+            throw new IllegalArgumentException("Failed to decode refresh token", e);
+        }
+    }
 }

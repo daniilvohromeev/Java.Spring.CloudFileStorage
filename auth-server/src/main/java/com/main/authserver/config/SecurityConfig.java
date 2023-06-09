@@ -69,7 +69,11 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/token", "/.well-known/jwks.json").permitAll()
+                .requestMatchers(
+                        "/token",
+                        "/.well-known/jwks.json",
+                        "/register",
+                        "/refresh").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()

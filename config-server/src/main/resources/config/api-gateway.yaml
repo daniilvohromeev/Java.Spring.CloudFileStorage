@@ -9,6 +9,7 @@ spring:
           "[/**]":
             allowedOrigins: "*"
             allowedHeaders: "*"
+            allowedCredentials: true
             allowedMethods:
               - GET
               - POST
@@ -20,6 +21,14 @@ spring:
           uri: lb://AUTH-SERVER
           predicates:
             - Path=/api/auth-server/**
+          filters:
+            - RewritePath=/api/auth-server/(?<path>.*), /$\{path}
+        - id: storage-server
+          uri: lb://STORAGE-SERVER
+          predicates:
+            - Path=/api/storage-server/**
+          filters:
+            - RewritePath=/api/storage-server/(?<path>.*), /$\{path}
 eureka:
   instance:
     hostname: localhost

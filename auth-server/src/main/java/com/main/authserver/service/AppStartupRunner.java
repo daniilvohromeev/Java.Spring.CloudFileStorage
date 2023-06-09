@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
-@Component
 @RequiredArgsConstructor
+@Component
 public class AppStartupRunner implements ApplicationRunner {
     private final RoleRepository roleService;
     private final UserRepository userService;

@@ -1,0 +1,24 @@
+.navigation-bar-bg{
+    background: #e0e1dd !important;
+}
+.border-radius{
+    border-radius:15px 15px 15px 15px !important;
+}
+
+.gradient-text {
+    /* Создание градиента на фоне */
+    background: linear-gradient(90deg, hsla(191, 88%, 81%, 1) 0%, hsla(260, 72%, 82%, 1) 50%, hsla(247, 73%, 69%, 1) 100%);
+
+    /* Задание прозрачного цвета текста */
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    /* Прозрачный цвет текста, чтобы показать градиентный фон */
+    color: transparent;
+
+    /* Дополнительные стили шрифта, если необходимо */
+    font-size: 40px;
+    /* Добавление тени к тексту */
+    /* Добавление тени к тексту */
+    /* Добавление тени к тексту */
+}

@@ -1,17 +1,16 @@
 server:
-  port: 8031
+  port: 8054
 spring:
   jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    database: postgresql
-    show-sql: true
     hibernate:
       ddl-auto: update
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    generate-ddl: true
   datasource:
-    platform: postgres
-    url: jdbc:postgresql://localhost:3307/auth-db
+    url: jdbc:postgresql://localhost:3308/cloud-storage-db
     username: root
     password: root
     driverClassName: org.postgresql.Driver

@@ -1,7 +1,10 @@
 package com.main.authserver.service;
 
+import com.main.authserver.mapper.UserMapper;
 import com.main.authserver.model.Role;
 import com.main.authserver.model.User;
+import com.main.authserver.payload.request.RegisterRequest;
+import com.main.authserver.payload.UserDTO;
 import com.main.authserver.repository.RoleRepository;
 import com.main.authserver.repository.UserRepository;
 import io.minio.MakeBucketArgs;
@@ -26,25 +29,41 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final UserMapper userMapper;
     private final MinioClient minioClient;
-    @Transactional
-    public User createUser(User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new IllegalArgumentException("Username is already taken");
+
+    public UserDTO createUser(RegisterRequest registerRequest) {
+        Role role = roleRepository.findByAuthority("ROLE_USER").orElseThrow(
+                () -> new RuntimeException("Такой роли не найдено")
+        );
+        if (userRepository.findByUsername(registerRequest.username()).isPresent()) {
+            throw new RuntimeException("Пользователь с таким именем уже существует");
         }
-        user.getAuthorities().add(roleRepository.findByAuthority("ROLE_USER").get());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        String bucketName = "bucket-for-user-" + user.getId();
+        User user =
+                User.builder()
+                        .username(registerRequest.username())
+                        .password(passwordEncoder.encode(registerRequest.password()))
+                        .authorities(Set.of(role))
+                        .accountNonExpired(true)
+                        .accountNonLocked(true)
+                        .credentialsNonExpired(true)
+                        .enabled(true)
+                        .build();
+        userRepository.save(user);
+        String bucketName = "bucket-"+registerRequest.username();
         try {
-            minioClient.makeBucket(MakeBucketArgs.builder()
-                    .bucket(bucketName).build());
+            minioClient.makeBucket(
+                    MakeBucketArgs.builder()
+                            .bucket(bucketName)
+                            .build());
         } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
                  InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
                  XmlParserException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Упсс, MinIO упал :-)");
         }
-        return userRepository.save(user);
+        return userMapper.convertToDto(user);
     }
+
     @Transactional
     public User updateUser(User user) {
         Optional<User> existingUser = userRepository.findById(user.getId());
