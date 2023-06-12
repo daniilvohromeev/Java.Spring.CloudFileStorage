@@ -1,6 +1,10 @@
 server:
   port: 8054
 spring:
+  servlet:
+    multipart:
+      max-file-size: 2500MB
+      max-request-size: 2500MB
   jpa:
     hibernate:
       ddl-auto: update

@@ -12,6 +12,25 @@ class FileMetadataService {
             },
         });
     }
+
+    async getBucketStructure(bucketName) {
+        return api.post('/storage-server/file/structure', bucketName);
+    }
+
+    async deleteFile(fileId) {
+        return api.delete('/storage-server/file/delete/' + fileId)
+    }
+
+    async downloadFile(fileId, onDownloadProgress) {
+        try {
+            return await api.get(`/storage-server/file/download/${fileId}`, {
+                responseType: 'blob',
+                onDownloadProgress
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export default new FileMetadataService();

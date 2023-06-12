@@ -1,7 +1,7 @@
 <template class="">
   <div id="app">
     <div class="container p-2">
-    <nav class="m-2 p-2 navbar navbar-expand navbar-light bg-light border-radius">
+    <nav class="navbar p-2 navbar-expand navbar-dark blurred-navbar rounded box-shadow">
       <a href="/" class="navbar-brand">SkyVault</a>
       <div class="navbar-nav me-auto">
         <li class="nav-item">
@@ -46,7 +46,7 @@
     </nav>
     </div>
 
-    <div class="container p-3">
+    <div class="container p-2">
       <router-view />
     </div>
   </div>

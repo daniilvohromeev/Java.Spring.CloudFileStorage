@@ -1,10 +1,13 @@
 package com.main.authserver.service;
 
+import com.main.authserver.model.User;
 import com.main.authserver.payload.request.TokenRefreshRequest;
 import com.main.authserver.payload.response.TokenRefreshResponse;
 import com.main.authserver.payload.response.TokenResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +23,7 @@ public class TokenService {
 
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;
+    private final UserService userService;
 
     public TokenResponse generateToken(Authentication authentication) {
         Instant now = Instant.now();
@@ -48,7 +52,7 @@ public class TokenService {
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
-    public TokenRefreshResponse refreshToken(TokenRefreshRequest request, Authentication authentication) {
+    public TokenRefreshResponse refreshToken(TokenRefreshRequest request) {
         try {
             Jwt jwt = this.decoder.decode(request.getRefreshToken());
             if (Objects.requireNonNull(jwt.getExpiresAt()).isBefore(Instant.now())) {
@@ -58,6 +62,11 @@ public class TokenService {
             if (subject == null) {
                 throw new IllegalArgumentException("Refresh token does not have a subject claim");
             }
+            User user =  userService.getUserByUsername(jwt.getSubject());
+            Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
+
+            // Установка Authentication объекта в SecurityContextHolder
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             TokenResponse tokenDTO = generateToken(authentication);
             return new TokenRefreshResponse(tokenDTO.token(), tokenDTO.refresh_token());
         } catch (JwtException e) {

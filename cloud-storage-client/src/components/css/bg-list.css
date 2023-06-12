@@ -1,5 +1,6 @@
-.navigation-bar-bg{
-    background: #e0e1dd !important;
+.background{
+    background-image: url('/src/assets/texture-dark-background-purple-4480x2520-3086.jpg'); /* Путь к вашему изображению */
+    background-size: cover; /* Размер фонового изображения */
 }
 .border-radius{
     border-radius:15px 15px 15px 15px !important;
@@ -21,4 +22,19 @@
     /* Добавление тени к тексту */
     /* Добавление тени к тексту */
     /* Добавление тени к тексту */
+}
+.border-top-solid-1px{
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.border-bottom-solid-1px{
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.blurred-navbar {
+    background: rgba(255, 255, 255, 0.025);
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: none;
+    /* Окантовка */
 }
